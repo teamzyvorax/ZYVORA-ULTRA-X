@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getUserFromToken } from '@zyvora/auth';
-import { generateAiReply } from '@/lib/ai-provider';
+import { generateAiReply } from '../../../../../lib/ai-provider';
 
 function tokenFrom(request: Request) {
   return request.headers.get('authorization')?.replace(/^Bearer\s+/i, '') ?? request.headers.get('cookie')?.match(/zyvora_session=([^;]+)/)?.[1];
