@@ -22,6 +22,7 @@ export default function Dashboard() {
   const [unread, setUnread] = useState(0);
   const [noticeError, setNoticeError] = useState('');
   const [loadingNotices, setLoadingNotices] = useState(true);
+  const [loggingOut, setLoggingOut] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -50,6 +51,20 @@ export default function Dashboard() {
     load();
     return () => { active = false; };
   }, [router]);
+
+  async function logout() {
+    if (loggingOut) return;
+    setLoggingOut(true);
+    try {
+      const response = await fetch('/api/v1/auth/logout', { method: 'POST' });
+      if (!response.ok) throw new Error('Sign out failed');
+      router.replace('/login');
+      router.refresh();
+    } catch {
+      setNoticeError('Could not sign out. Please try again.');
+      setLoggingOut(false);
+    }
+  }
 
   async function markRead(id: string) {
     const response = await fetch('/api/v1/notifications', {
@@ -88,7 +103,7 @@ export default function Dashboard() {
       <section className="dash-main">
         <header className="dash-top">
           <div><p className="eyebrow">ZYVORA CORE / CONTROL CENTER</p><h1>Welcome, <em>{user.username}</em></h1></div>
-          <button className="avatar" aria-label="User profile">ZX</button>
+          <div className="dash-account-actions"><button className="avatar" aria-label="User profile">ZX</button><button className="logout-button" onClick={logout} disabled={loggingOut}>{loggingOut ? 'SIGNING OUT…' : 'SIGN OUT ↗'}</button></div>
         </header>
         <section className="hero-panel">
           <div><span className="pill">CORE · LEVEL {user.level}</span><h2>Your digital universe<br/>starts here.</h2><p>One identity. One core. Every ZYVORA system connected.</p><button onClick={() => router.push('/ai')} className="primary">OPEN AI OS →</button></div>
