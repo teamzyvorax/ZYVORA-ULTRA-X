@@ -19,3 +19,8 @@
 .notice-empty,.notice-error{color:var(--muted);font-size:13px;padding:12px 0}
 .notice-error{color:#ff9b7b}
 @media(max-width:600px){.notification-heading{align-items:flex-start}.notification{flex-wrap:wrap}.notification-actions{width:100%;padding-left:20px}}
+.dash-account-actions{display:flex;align-items:center;gap:12px;margin-top:-18px}
+.logout-button{border:1px solid #57334a;background:#1b1020;color:#ff9aaf;padding:11px 14px;border-radius:8px;font-size:10px;font-weight:900;letter-spacing:1px;cursor:pointer}
+.logout-button:hover{border-color:#ff648b;background:#291321}
+.logout-button:disabled{opacity:.55;cursor:wait}
+@media(max-width:600px){.dash-account-actions{gap:7px}.logout-button{padding:9px;font-size:9px}}
