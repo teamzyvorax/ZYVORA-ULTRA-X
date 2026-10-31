@@ -13,6 +13,7 @@ const allowedOrigins = new Set(
 
 type Client = { username: string; room: string };
 const clients = new Map<WebSocket, Client>();
+const pendingUsernames = new WeakMap<WebSocket, string>();
 const server = createServer((request, response) => {
   if (request.url === '/health') {
     response.writeHead(200, { 'content-type': 'application/json' });
@@ -58,7 +59,8 @@ server.on('upgrade', async (request, socket, head) => {
       return;
     }
     wss.handleUpgrade(request, socket, head, ws => {
-      wss.emit('connection', ws, request, user.username);
+      pendingUsernames.set(ws, user.username);
+      wss.emit('connection', ws, request);
     });
   } catch {
     socket.write('HTTP/1.1 503 Service Unavailable\r\n\r\n');
@@ -66,7 +68,8 @@ server.on('upgrade', async (request, socket, head) => {
   }
 });
 
-wss.on('connection', (socket, _request, username: string) => {
+wss.on('connection', socket => {
+  const username = pendingUsernames.get(socket) ?? 'unknown';
   const room = 'nexus-lobby';
   clients.set(socket, { username, room });
   socket.send(JSON.stringify({ type: 'ready', room, username }));
@@ -78,12 +81,7 @@ wss.on('connection', (socket, _request, username: string) => {
       if (message.type !== 'chat' || typeof message.text !== 'string') return;
       const cleanText = message.text.trim().slice(0, 500);
       if (!cleanText) return;
-      broadcast(room, {
-        type: 'chat',
-        username,
-        text: cleanText,
-        sentAt: new Date().toISOString()
-      });
+      broadcast(room, { type: 'chat', username, text: cleanText, sentAt: new Date().toISOString() });
     } catch {
       socket.send(JSON.stringify({ type: 'error', message: 'Invalid message format' }));
     }
