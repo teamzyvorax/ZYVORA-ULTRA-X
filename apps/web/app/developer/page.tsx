@@ -1,0 +1,2 @@
+import Link from 'next/link';
+export default function DeveloperPage(){return <main className="module-placeholder"><p className="eyebrow">ZYVORA DEVELOPER CENTER</p><h1>BUILD THE<br/><em>CORE.</em></h1><p>Developer workspace foundation for projects, API keys, SDKs, GitHub integrations, webhooks and deployments.</p><div className="placeholder-grid"><b>PROJECTS</b><b>API KEYS</b><b>SDK</b><b>WEBHOOKS</b></div><Link href="/dashboard">← RETURN TO CORE</Link></main>}
