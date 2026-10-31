@@ -24,6 +24,11 @@ export async function createSession(userId: string) {
   return { token: rawToken, expiresAt };
 }
 
+export async function revokeSession(token: string | undefined) {
+  if (!token) return;
+  await getDb().delete(sessions).where(eq(sessions.tokenHash, hashToken(token)));
+}
+
 export async function getUserFromToken(token: string | undefined) {
   if (!token) return null;
   const rows = await getDb().select({ user: users })
