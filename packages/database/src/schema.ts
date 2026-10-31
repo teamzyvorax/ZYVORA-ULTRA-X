@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, integer, uuid, index } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, integer, uuid, index, boolean } from 'drizzle-orm/pg-core';
 
 export const users = pgTable('users', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -48,3 +48,16 @@ export const gameProgress = pgTable('game_progress', {
   level: integer('level').notNull().default(1),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull()
 }, (table) => ({ userIdx: index('game_progress_user_idx').on(table.userId) }));
+
+export const notifications = pgTable('notifications', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  title: text('title').notNull(),
+  body: text('body').notNull(),
+  href: text('href'),
+  isRead: boolean('is_read').notNull().default(false),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull()
+}, (table) => ({
+  userIdx: index('notifications_user_created_idx').on(table.userId, table.createdAt),
+  unreadIdx: index('notifications_user_read_idx').on(table.userId, table.isRead)
+}));
