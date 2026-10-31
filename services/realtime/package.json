@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "check": "tsc --noEmit -p tsconfig.json",
-    "start": "tsx src/index.ts"
+    "start": "tsx src/index.ts",
+    "build": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
     "@zyvora/auth": "workspace:*",
