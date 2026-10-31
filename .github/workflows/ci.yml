@@ -6,7 +6,7 @@ on:
   pull_request:
 
 jobs:
-  web-check:
+  verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -18,4 +18,9 @@ jobs:
           node-version: 20
           cache: pnpm
       - run: pnpm install --no-frozen-lockfile
-      - run: pnpm --filter web build
+      - name: Build web application
+        run: pnpm --filter @zyvora/web build
+      - name: Check realtime service types
+        run: pnpm --filter @zyvora/realtime check
+      - name: Build API service
+        run: pnpm --filter @zyvora/api build
