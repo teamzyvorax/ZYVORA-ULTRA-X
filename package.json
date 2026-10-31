@@ -3,6 +3,11 @@
   "private": true,
   "version": "0.1.0",
   "packageManager": "pnpm@10.0.0",
-  "scripts": {"dev":"pnpm --parallel --filter @zyvora/web --filter @zyvora/api dev","build":"pnpm -r build"},
-  "devDependencies": {"typescript":"^5.7.3"}
+  "scripts": {
+    "dev": "pnpm --parallel --filter @zyvora/web --filter @zyvora/api --filter @zyvora/realtime dev",
+    "build": "pnpm -r build"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
 }
